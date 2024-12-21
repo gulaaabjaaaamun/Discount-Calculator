@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Discount Calculator</h1>
+        
+        <!-- Country Selection -->
+        <label for="country">Select Your Country:</label>
+        <select id="country" onchange="setCountryDetails()">
+            <option value="">Choose a country</option>
+            <option value="US" data-currency="$" data-tax="7">United States</option>
+            <option value="IN" data-currency="₹" data-tax="18">India</option>
+            <option value="AE" data-currency="AED" data-tax="5">United Arab Emirates</option>
+            <option value="UK" data-currency="£" data-tax="20">United Kingdom</option>
+            <option value="CA" data-currency="CAD" data-tax="13">Canada</option>
+            <option value="AU" data-currency="AUD" data-tax="10">Australia</option>
+            <option value="DE" data-currency="€" data-tax="19">Germany</option>
+            <option value="JP" data-currency="¥" data-tax="10">Japan</option>
+            <option value="KR" data-currency="₩" data-tax="10">South Korea</option>
+            <option value="CN" data-currency="¥" data-tax="13">China</option>
+            <option value="QA" data-currency="QAR" data-tax="0">Qatar</option>
+            <option value="SA" data-currency="SAR" data-tax="15">Saudi Arabia</option>
+            <option value="BH" data-currency="BHD" data-tax="5">Bahrain</option>
+            <option value="JO" data-currency="JOD" data-tax="16">Jordan</option>
+            <option value="KW" data-currency="KWD" data-tax="0">Kuwait</option>
+        </select>
+
+        <!-- Inputs for Calculation -->
+        <label for="originalPrice">Original Price:</label>
+        <input type="number" id="originalPrice" placeholder="Enter the original price">
+
+        <label for="discount">Discount Percentage:</label>
+        <input type="number" id="discount" placeholder="Enter discount %">
+
+        <label for="tax">Tax Percentage (Auto-Filled):</label>
+        <input type="number" id="tax" readonly>
+
+        <button onclick="calculateDiscount()">Calculate</button>
+
+        <!-- Results -->
+        <h3>Results:</h3>
+        <p id="results">Fill in the details to see the calculation.</p>
+    </div>
+
+    <script>
+        function setCountryDetails() {
+            const countrySelect = document.getElementById('country');
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+
+            // Set tax and currency based on country
+            const tax = selectedOption.getAttribute('data-tax') || 0;
+            document.getElementById('tax').value = tax;
+        }
+
+        function calculateDiscount() {
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value);
+            const discount = parseFloat(document.getElementById('discount').value);
+            const tax = parseFloat(document.getElementById('tax').value);
+
+            if (isNaN(originalPrice) || isNaN(discount)) {
+                document.getElementById('results').innerText = 'Please enter valid values for price and discount.';
+                return;
+            }
+
+            // Calculate discounted price
+            const discountAmount = (originalPrice * discount) / 100;
+            const discountedPrice = originalPrice - discountAmount;
+
+            // Calculate tax
+            const taxAmount = (discountedPrice * tax) / 100;
+            const finalPrice = discountedPrice + taxAmount;
+
+            document.getElementById('results').innerHTML = `
+                <strong>Discounted Price:</strong> ${discountedPrice.toFixed(2)}<br>
+                <strong>Tax Amount:</strong> ${taxAmount.toFixed(2)}<br>
+                <strong>Final Price:</strong> ${finalPrice.toFixed(2)}
+            `;
+        }
+    </script>
+</body>
+</html>
